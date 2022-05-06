@@ -6,16 +6,14 @@ from google.cloud import language_v1
 
 app = Flask(__name__)
 logging.basicConfig(level=logging.DEBUG)
+# I have found the salience to be a relatively bad determiner of what's important in a question
 SALIENCE_THRESHOLD = 0.1
 
 
 def sample_analyze_entities(text_content: str):
-    """
-    Analyzing Entities in a String
+    """ Analyzing Entities in a String
 
-    Args:
-      text_content The text content to analyze
-    """
+    Args: text_content The text content to analyze """
     salient_entities: List[Tuple[str, int]] = []
     client = language_v1.LanguageServiceClient()
 
@@ -32,10 +30,15 @@ def sample_analyze_entities(text_content: str):
     encoding_type = language_v1.EncodingType.UTF8
 
     response = client.analyze_entities(request = {'document': document, 'encoding_type': encoding_type})
+    for metadata_name, metadata_value in entity.metadata.items():
+            logging.info(u"{}: {}".format(metadata_name, metadata_value))
 
     # Loop through entitites returned from the API
     for entity in response.entities:
         if entity.salience > SALIENCE_THRESHOLD:
+            salient_entities.append((entity.name, entity.salience))
+        # keep entities w/ metadata as they are likely important regardless of salience
+        elif 'mid' in entity.metadata or 'wikipedia' in entity.metadata:
             salient_entities.append((entity.name, entity.salience))
 
     # Get the language of the text, which will be the same as
