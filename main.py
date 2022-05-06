@@ -16,7 +16,7 @@ def sample_analyze_entities(text_content: str):
     Args:
       text_content The text content to analyze
     """
-    salient_entities = []
+    salient_entities: List[Tuple[str, int]] = []
     client = language_v1.LanguageServiceClient()
 
     # Available types: PLAIN_TEXT, HTML
@@ -36,13 +36,16 @@ def sample_analyze_entities(text_content: str):
     # Loop through entitites returned from the API
     for entity in response.entities:
         if entity.salience > SALIENCE_THRESHOLD:
-            salient_entities.append(entity.name)
+            salient_entities.append((entity.name, entity.salience))
 
     # Get the language of the text, which will be the same as
     # the language specified in the request or, if not specified,
     # the automatically-detected language.
     logging.info(u"Language of the text: {}".format(response.language))
-    return salient_entities
+    
+    # Sort the entities so the most salient are first
+    salient_entitiy_names = [i[0] for i in sorted(salient_entities, key=lambda x: x[1], reverse=True)]
+    return salient_entitiy_names
 
 
 @app.route("/", methods=['GET','POST'])
