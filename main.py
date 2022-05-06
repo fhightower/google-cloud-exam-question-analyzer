@@ -38,8 +38,6 @@ def sample_analyze_entities(text_content: str):
     encoding_type = language_v1.EncodingType.UTF8
 
     response = client.analyze_entities(request = {'document': document, 'encoding_type': encoding_type})
-    for metadata_name, metadata_value in entity.metadata.items():
-            logging.info(u"{}: {}".format(metadata_name, metadata_value))
 
     # Loop through entitites returned from the API
     for entity in response.entities:
