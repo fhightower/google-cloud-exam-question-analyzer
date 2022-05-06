@@ -67,7 +67,7 @@ def sample_analyze_entities(text_content: str):
 @app.route("/")
 def hello_world(request):
     name = os.environ.get("NAME", "World")
-    sample_analyze_entities("when in the course of human events, it becomes necessary for one Joe Biden to ask Russia...")
+    sample_analyze_entities("Your company built a TensorFlow neutral-network model with a large number of neurons and layers. The model fits well for the training data. However, when tested against new data, it performs poorly. What method can you employ to address this?")
     return "Hello {}!".format(name)
 
 
