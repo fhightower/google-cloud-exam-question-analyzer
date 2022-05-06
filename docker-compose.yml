@@ -1,0 +1,16 @@
+version: '3.4'
+
+services:
+  _base:
+    &base
+    build:
+      dockerfile: Dockerfile
+      context: .
+    volumes:
+      - ./:/app
+
+  serve:
+    <<: *base
+    command: gunicorn --bind :8080 --workers 1 --threads 8 --timeout 0 main:app
+    ports:
+      - "8080:8080"
