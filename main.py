@@ -1,7 +1,7 @@
 import os
 import logging
 
-from flask import Flask, request
+from flask import Flask, request, jsonify
 from google.cloud import language_v1
 
 app = Flask(__name__)
@@ -63,14 +63,15 @@ def sample_analyze_entities(text_content: str):
     # the language specified in the request or, if not specified,
     # the automatically-detected language.
     logging.info(u"Language of the text: {}".format(response.language))
+    return response
 
 
 @app.route("/", methods=['GET','POST'])
 def hello_world():
-    logging.debug(f"json: {request.get_json()}")
-    name = os.environ.get("NAME", "World")
-    sample_analyze_entities("Your company built a TensorFlow neutral-network model with a large number of neurons and layers. The model fits well for the training data. However, when tested against new data, it performs poorly. What method can you employ to address this?")
-    return "Hello {}!".format(name)
+    data = request.get_json()
+    question = data['question']
+    results = sample_analyze_entities(question)
+    return jsonify(results)
 
 
 if __name__ == "__main__":
