@@ -6,6 +6,7 @@ from google.cloud import language_v1
 
 app = Flask(__name__)
 logging.basicConfig(level=logging.DEBUG)
+SALIENCE_THRESHOLD = 0.1
 
 
 def sample_analyze_entities(text_content: str):
@@ -15,7 +16,7 @@ def sample_analyze_entities(text_content: str):
     Args:
       text_content The text content to analyze
     """
-
+    salient_entities = []
     client = language_v1.LanguageServiceClient()
 
     # Available types: PLAIN_TEXT, HTML
@@ -34,36 +35,14 @@ def sample_analyze_entities(text_content: str):
 
     # Loop through entitites returned from the API
     for entity in response.entities:
-        logging.info(u"Representative name for the entity: {}".format(entity.name))
-
-        # Get entity type, e.g. PERSON, LOCATION, ADDRESS, NUMBER, et al
-        logging.info(u"Entity type: {}".format(language_v1.Entity.Type(entity.type_).name))
-
-        # Get the salience score associated with the entity in the [0, 1.0] range
-        logging.info(u"Salience score: {}".format(entity.salience))
-
-        # Loop over the metadata associated with entity. For many known entities,
-        # the metadata is a Wikipedia URL (wikipedia_url) and Knowledge Graph MID (mid).
-        # Some entity types may have additional metadata, e.g. ADDRESS entities
-        # may have metadata for the address street_name, postal_code, et al.
-        for metadata_name, metadata_value in entity.metadata.items():
-            logging.info(u"{}: {}".format(metadata_name, metadata_value))
-
-        # Loop over the mentions of this entity in the input document.
-        # The API currently supports proper noun mentions.
-        for mention in entity.mentions:
-            logging.info(u"Mention text: {}".format(mention.text.content))
-
-            # Get the mention type, e.g. PROPER for proper noun
-            logging.info(
-                u"Mention type: {}".format(language_v1.EntityMention.Type(mention.type_).name)
-            )
+        if entity.salience > SALIENCE_THRESHOLD:
+            salient_entities.append(entity.name)
 
     # Get the language of the text, which will be the same as
     # the language specified in the request or, if not specified,
     # the automatically-detected language.
     logging.info(u"Language of the text: {}".format(response.language))
-    return response
+    return salient_entities
 
 
 @app.route("/", methods=['GET','POST'])
