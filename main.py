@@ -5,6 +5,7 @@ from flask import Flask, request
 from google.cloud import language_v1
 
 app = Flask(__name__)
+logging.basicConfig(level=logging.DEBUG)
 
 
 def sample_analyze_entities(text_content: str):
