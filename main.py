@@ -1,20 +1,28 @@
 import os
 import logging
+from typing import List
 
 from flask import Flask, request, jsonify
 from google.cloud import language_v1
 
 app = Flask(__name__)
 logging.basicConfig(level=logging.DEBUG)
-# I have found the salience to be a relatively bad determiner of what's important in a question
+# I have found the salience to be a relatively bad determiner of what's important in a question so this value is very low
 SALIENCE_THRESHOLD = 0.1
+
+
+def _is_used_as_proper_noun(mentions) -> bool:
+    for mention in mentions:
+        if language_v1.EntityMention.Type(mention.type_).name == "Proper":
+            return True
+    return False
 
 
 def sample_analyze_entities(text_content: str):
     """ Analyzing Entities in a String
 
     Args: text_content The text content to analyze """
-    salient_entities: List[Tuple[str, int]] = []
+    salient_entities: List[str] = []
     client = language_v1.LanguageServiceClient()
 
     # Available types: PLAIN_TEXT, HTML
@@ -36,18 +44,19 @@ def sample_analyze_entities(text_content: str):
     # Loop through entitites returned from the API
     for entity in response.entities:
         if entity.salience > SALIENCE_THRESHOLD:
-            salient_entities.append((entity.name, entity.salience))
+            salient_entities.append(entity.name)
         # keep entities w/ metadata as they are likely important regardless of salience
         elif 'mid' in entity.metadata or 'wikipedia' in entity.metadata:
-            salient_entities.append((entity.name, entity.salience))
+            salient_entities.append(entity.name)
+        # keep entities which are proper nouns
+        elif _is_used_as_proper_noun(entity.mentions):
+            salient_entities.append(entity.name)
 
     # Get the language of the text, which will be the same as
     # the language specified in the request or, if not specified,
     # the automatically-detected language.
     logging.info(u"Language of the text: {}".format(response.language))
     
-    # Sort the entities so the most salient are first
-    salient_entitiy_names = [i[0] for i in sorted(salient_entities, key=lambda x: x[1], reverse=True)]
     return salient_entitiy_names
 
 
