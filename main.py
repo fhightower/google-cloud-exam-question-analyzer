@@ -55,7 +55,7 @@ def sample_analyze_entities(text_content: str):
     # the automatically-detected language.
     logging.info(u"Language of the text: {}".format(response.language))
     
-    return salient_entitiy_names
+    return salient_entities
 
 
 @app.route("/", methods=['GET','POST'])
