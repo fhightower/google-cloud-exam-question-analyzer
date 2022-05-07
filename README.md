@@ -9,7 +9,7 @@ uses the natural language API to identify key entities in them, and stores them 
 
 To run this system you need to:
 
-0. You probably want to create a new Google Cloud project
+0. (Recommended) Create a new Google Cloud project
 1. Create a BigQuery dataset and table with the schema:
 
 	```json
@@ -29,14 +29,14 @@ To run this system you need to:
 
 2. Deploy the code in this repo to Cloud Run
   - You can do this by forking the [base repo](https://github.com/fhightower/google-cloud-exam-question-analyzer) and using Cloud Build to trigger builds when a change is pushed (or builds can be triggered on-demand in this way)
-3. Add environment variable to Cloud Run app with name `BQ_TABLE_PATH` and value of the path to the BigQuery table and dataset you created in step 1 (it will have the format `{project-id}.{dataset-name}.{table-name}` (example: `bigquery-public-data.usa_names.usa_1910_2013`))
-4. Now, you can post questions you got wrong (and I recommend also posting the correct answer) to the system like:
+3. Add environment variable to Cloud Run app with name `BQ_TABLE_PATH` and value of the path to the BigQuery dataset and table you created in step 1 (it will have the format `{project-id}.{dataset-name}.{table-name}` (example: `bigquery-public-data.usa_names.usa_1910_2013`))
+4. Post questions you got wrong (and I recommend also posting the correct answer) to the system like:
 
 ```
-curl -X POST -H "Content-Type: application/json" -d '{"question": "..."}' https://CLOUDRUN-DOMAIN-NAME-REPLACE-ME
+curl -X POST -H "Content-Type: application/json" -d '{"question": "..."}' https://CLOUD-RUN-DOMAIN-NAME-REPLACE-ME
 ```
 
-5. Do some analysis in BigQuery:
+5. Success! Now, do some analysis in BigQuery to identify themes you are missing.
 
 	You can use this query to view keywords and their counts:
 
@@ -45,7 +45,7 @@ curl -X POST -H "Content-Type: application/json" -d '{"question": "..."}' https:
 	  kws,
 	  COUNT(*)
 	FROM
-	  `{DATABASE-PATH}`,
+	  `{REPLACE-ME-WITH-BIGQUERY-PATH}`,
 	  UNNEST(keywords) AS kws
 	GROUP BY
 	  kws
