@@ -1,6 +1,9 @@
 from typing import List
+import logging
 
 from google.cloud import language_v1
+
+logging.basicConfig(level=logging.DEBUG)
 
 # I have found the salience to be a relatively bad determiner of what's important in a question so this value is very low
 SALIENCE_THRESHOLD = 0.1
