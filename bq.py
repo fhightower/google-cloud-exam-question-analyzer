@@ -1,30 +1,34 @@
 from typing import List
+import json
+import logging
 
 from google.cloud import bigquery
 
+logging.basicConfig(level=logging.DEBUG)
+
 # this should look like: `bigquery-public-data.usa_names.usa_1910_2013`
-# ({}.{})
+# ({project_id}.{dataset}.{table})
 BQ_TABLE_PATH = ''
 
 # Construct a BigQuery client object.
 client = bigquery.Client()
 
 query = """
-    SELECT name, SUM(number) as total_people
-    FROM `bigquery-public-data.usa_names.usa_1910_2013`
-    WHERE state = 'TX'
-    GROUP BY name, state
-    ORDER BY total_people DESC
-    LIMIT 20
+INSERT
+  `{}` (question, keywords)
+VALUES
+  ("{}", {})
 """
-query_job = client.query(query)  # Make an API request.
-
-print("The query data:")
-for row in query_job:
-    # Row values can be accessed by field name or index.
-    print("name={}, count={}".format(row[0], row["total_people"]))
 
 
 def store_results(question: str, salient_words: List[str]):
-    pass
+    full_query = query.formt(BQ_TABLE_PATH, question, json.dumps(salient_words))
+    logging.debug(f"Full query: {full_query}")
+    query_job = client.query(full_query)  # Make an API request.
+    logging.debug(f"Query job: {query_job}")
+
+    print("The query data:")
+    for row in query_job:
+        # Row values can be accessed by field name or index.
+        print("name={}, count={}".format(row[0], row["total_people"]))
 
