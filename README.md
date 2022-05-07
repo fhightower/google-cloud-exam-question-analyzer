@@ -1,10 +1,9 @@
 # Google Cloud Exam Question Analyzer
 
 While studying for [Google's Professional Data Engineer Certification](https://cloud.google.com/certification/data-engineer), I took a number of practice exams.
-
-I wanted a way to find commonalities across the questions I got wrong to identiy areas I needed to study further.
-
-To accomplish this, and to learn a bit more about Google cloud, I created this system to analyze a question.
+I wanted to collect the questions I got wrong so I could identify areas I need to study more.
+To accomplish this, and to learn a bit more about Google cloud, I created this system which collects questions you've gotten wrong,
+uses the natural language API to identify key entities in them, and stores them in BigQuery for your analysis.
 
 ## Setup
 
