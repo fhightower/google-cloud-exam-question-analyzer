@@ -27,7 +27,7 @@ VALUES
 
 
 def store_results(question: str, salient_words: List[str]):
-    full_query = query.formt(BQ_TABLE_PATH, question, json.dumps(salient_words))
+    full_query = query.format(BQ_TABLE_PATH, question, json.dumps(salient_words))
     logging.debug(f"Full query: {full_query}")
     query_job = client.query(full_query)  # Make an API request.
     logging.debug(f"Query job: {query_job}")
