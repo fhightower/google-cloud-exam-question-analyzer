@@ -15,6 +15,7 @@ def hello_world():
     data = request.get_json()
     question = data['question']
     results = analyze_entities(question)
+    store_results(question, results)
     return jsonify(results)
 
 
