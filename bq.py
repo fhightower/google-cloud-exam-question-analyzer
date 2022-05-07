@@ -1,6 +1,7 @@
 from typing import List
 import json
 import logging
+import os
 
 from google.cloud import bigquery
 
@@ -8,7 +9,11 @@ logging.basicConfig(level=logging.DEBUG)
 
 # this should look like: `bigquery-public-data.usa_names.usa_1910_2013`
 # ({project_id}.{dataset}.{table})
-BQ_TABLE_PATH = ''
+BQ_PATH_ENV_VAR_NAME = "BQ_TABLE_PATH"
+try:
+    BQ_TABLE_PATH = os.environ[BQ_PATH_ENV_VAR_NAME]
+except KeyError:
+    raise RuntimeError(f"Unable to find the required {BQ_PATH_ENV_VAR_NAME} environment variable.")
 
 # Construct a BigQuery client object.
 client = bigquery.Client()
