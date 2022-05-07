@@ -7,7 +7,7 @@ from google.cloud import bigquery
 
 logging.basicConfig(level=logging.DEBUG)
 
-# this should look like: `bigquery-public-data.usa_names.usa_1910_2013`
+# this should look like: earbigquery-public-data.usa_names.usa_1910_2013`
 # ({project_id}.{dataset}.{table})
 BQ_PATH_ENV_VAR_NAME = "BQ_TABLE_PATH"
 try:
