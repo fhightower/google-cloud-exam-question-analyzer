@@ -7,7 +7,7 @@ uses the natural language API to identify key entities in them, and stores them 
 
 ![This system receives content POSTed to it from a client, find entities using the Natural Language API, writes those entities into BigQuery, and responds with the entities](architecture.png "System Architecture")
 
-*Created with the Google Architecture diagramming tool](https://googlecloudcheatsheet.withgoogle.com/architecture)*
+*Created with the [Google Architecture diagramming tool](https://googlecloudcheatsheet.withgoogle.com/architecture)*
 
 ## Setup
 
