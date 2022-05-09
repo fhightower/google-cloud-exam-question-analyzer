@@ -5,6 +5,10 @@ I wanted to collect the questions I got wrong so I could identify areas I need t
 To accomplish this, and to learn a bit more about Google cloud, I created this system which collects questions you've gotten wrong,
 uses the natural language API to identify key entities in them, and stores them in BigQuery for your analysis.
 
+![This system receives content POSTed to it from a client, find entities using the Natural Language API, writes those entities into BigQuery, and responds with the entities](architecture.png "System Architecture")
+
+*Created with the Google Architecture diagramming tool](https://googlecloudcheatsheet.withgoogle.com/architecture)*
+
 ## Setup
 
 To run this system you need to:
