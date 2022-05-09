@@ -6,6 +6,7 @@ To accomplish this, and to learn a bit more about Google cloud, I created this s
 uses the natural language API to identify key entities in them, and stores them in BigQuery for your analysis.
 
 ![This system receives content POSTed to it from a client, find entities using the Natural Language API, writes those entities into BigQuery, and responds with the entities](architecture.png "System Architecture")
+![This system receives content POSTed to it from a client, find entities using the Natural Language API, writes those entities into BigQuery, and responds with the entities](architecture.svg "System Architecture")
 
 *Created with the [Google Architecture diagramming tool](https://googlecloudcheatsheet.withgoogle.com/architecture)*
 
